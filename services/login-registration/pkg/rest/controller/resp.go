@@ -1,6 +1,6 @@
 package controller
 
-import "login-registration/pkg/model/users"
+import "github.com/radekkrejcirik01/Casblanca-backend/services/login-registration/pkg/model/users"
 
 type resp struct {
 	Status  string         `json:""`

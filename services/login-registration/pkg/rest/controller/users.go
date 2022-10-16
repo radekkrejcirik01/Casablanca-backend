@@ -1,10 +1,9 @@
 package controller
 
 import (
-	"login-registration/pkg/database"
-	"login-registration/pkg/model/users"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/radekkrejcirik01/Casblanca-backend/services/login-registration/pkg/database"
+	"github.com/radekkrejcirik01/Casblanca-backend/services/login-registration/pkg/model/users"
 )
 
 // UserRegister POST /register

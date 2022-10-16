@@ -1,4 +1,4 @@
-module login-registration
+module github.com/radekkrejcirik01/Casblanca-backend/services/login-registration
 
 go 1.19
 

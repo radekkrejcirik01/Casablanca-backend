@@ -1,9 +1,8 @@
 package rest
 
 import (
-	"login-registration/pkg/rest/controller"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/radekkrejcirik01/Casblanca-backend/services/login-registration/pkg/rest/controller"
 )
 
 // Create new REST API serveer
