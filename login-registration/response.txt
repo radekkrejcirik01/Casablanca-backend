@@ -1,0 +1,1 @@
+{"statusCode":200,"headers":null,"multiValueHeaders":{"Content-Type":["application/json"]},"body":"{\"Status\":\"ok dobry\",\"TS\":\"2022-10-16T13:25:01.133553232Z\"}"}
