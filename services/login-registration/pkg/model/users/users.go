@@ -12,7 +12,7 @@ type USERS struct {
 }
 
 func (USERS) TableName() string {
-	return "Users"
+	return "users"
 }
 
 // Create new USERS in DB
