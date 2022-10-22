@@ -55,6 +55,7 @@ func UserRegister(c *fiber.Ctx) error {
 	})
 }
 
+// AddTag POST /tags
 func AddTag(c *fiber.Ctx) error {
 	t := &users.Tags{}
 	if err := c.BodyParser(t); err != nil {
@@ -75,6 +76,7 @@ func AddTag(c *fiber.Ctx) error {
 	})
 }
 
+// AddPhoto POST /photos
 func AddPhoto(c *fiber.Ctx) error {
 	t := &users.Photos{}
 	if err := c.BodyParser(t); err != nil {

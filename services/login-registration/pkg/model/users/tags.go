@@ -21,7 +21,7 @@ func (Tag) TableName() string {
 	return "tags"
 }
 
-// Create new User in DBs
+// Create new Tag in DB
 func CreateTag(db *gorm.DB, t *Tags) error {
 	result := make([]Tag, 0)
 	for _, tag := range t.Tags {

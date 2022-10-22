@@ -21,7 +21,7 @@ func (Photo) TableName() string {
 	return "photos"
 }
 
-// Create new User in DBs
+// Create new Photo in DB
 func CreatePhoto(db *gorm.DB, t *Photos) error {
 	result := make([]Photo, 0)
 	for _, photo := range t.Photos {
