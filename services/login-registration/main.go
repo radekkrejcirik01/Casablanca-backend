@@ -16,9 +16,10 @@ var fiberLambda *fiberadapter.FiberLambda
 
 func init() {
 	database.Connect()
-	if err := database.DB.AutoMigrate(&users.USERS{}); err != nil {
+	if err := database.DB.AutoMigrate(&users.User{}, &users.Photo{}, &users.Tag{}); err != nil {
 		log.Fatal(err)
 	}
+
 	fiberLambda = fiberadapter.New(rest.Create())
 }
 

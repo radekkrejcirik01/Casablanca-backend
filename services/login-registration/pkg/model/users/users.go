@@ -4,45 +4,48 @@ import (
 	"gorm.io/gorm"
 )
 
-// USERS db model
-type USERS struct {
-	Id       uint   `gorm:"primary_key;auto_increment;not_null"`
-	Username string `json:""`
-	Password string `json:""`
+type User struct {
+	Id        uint   `gorm:"primary_key;auto_increment;not_null"`
+	Firstname string `json:""`
+	Birthday  string `json:""`
+	Gender    string `json:""`
+	ShowMe    string `json:""`
+	Email     string `json:""`
+	Password  string `json:""`
 }
 
-func (USERS) TableName() string {
+func (User) TableName() string {
 	return "users"
 }
 
-// Create new USERS in DB
-func Create(db *gorm.DB, t *USERS) error {
+// Create new User in DB
+func CreateUser(db *gorm.DB, t *User) error {
 	return db.Create(t).Error
 }
 
-// Read one USERS from DB by ID
-func Read(db *gorm.DB, t *USERS, id string) error {
+// Read one User from DB by ID
+func Read(db *gorm.DB, t *User, id string) error {
 	return db.Where("id = ?", id).First(t).Error
 }
 
-// ReadAll USERS from DB
-func ReadAll(db *gorm.DB, t *[]USERS) error {
+// ReadAll User from DB
+func ReadAll(db *gorm.DB, t *[]User) error {
 	return db.Find(t).Error
 }
 
-// Update USERS in DB
-func Update(db *gorm.DB, t *USERS) error {
+// Update User in DB
+func Update(db *gorm.DB, t *User) error {
 	return db.Save(t).Error
 }
 
-// Delete USERS from DB
-func Delete(db *gorm.DB, t *USERS) error {
+// Delete User from DB
+func Delete(db *gorm.DB, t *User) error {
 	return db.Delete(t).Error
 }
 
-// DeleteByID one USERS by ID
+// DeleteByID one User by ID
 func DeleteById(db *gorm.DB, id string) error {
-	users := &USERS{}
+	users := &User{}
 	if err := Read(db, users, id); err != nil {
 		return err
 	}
@@ -51,6 +54,6 @@ func DeleteById(db *gorm.DB, id string) error {
 }
 
 // Login authenticate user
-func Login(db *gorm.DB, t *USERS) error {
-	return db.Where("username = ? AND password = ?", t.Username, t.Password).First(t).Error
+func Login(db *gorm.DB, t *User) error {
+	return db.Where("username = ? AND password = ?", t.Email, t.Password).First(t).Error
 }

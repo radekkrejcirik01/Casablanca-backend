@@ -7,6 +7,7 @@ require (
 	github.com/awslabs/aws-lambda-go-api-proxy v0.13.3
 	github.com/gofiber/fiber/v2 v2.38.1
 	github.com/joho/godotenv v1.4.0
+	github.com/lib/pq v1.10.2
 	gorm.io/driver/mysql v1.4.1
 	gorm.io/gorm v1.24.0
 )
