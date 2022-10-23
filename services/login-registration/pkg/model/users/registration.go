@@ -15,3 +15,8 @@ type Registration struct {
 	Email     string         `json:""`
 	Password  string         `json:""`
 }
+
+type RegistrationDataResponse struct {
+	Id    uint   `json:"id"`
+	Email string `json:"email"`
+}
