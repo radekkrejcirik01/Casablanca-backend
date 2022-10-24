@@ -12,6 +12,7 @@ func Create() *fiber.App {
 	app.Get("/", controller.Index)
 
 	app.Post("/register", controller.UserRegister)
+	app.Post("/login", controller.UserLogin)
 	app.Post("/tags", controller.AddTag)
 	app.Post("/photos", controller.AddTag)
 	app.Get("/:id", controller.UserGet)

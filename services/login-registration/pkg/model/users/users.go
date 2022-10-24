@@ -57,8 +57,3 @@ func DeleteById(db *gorm.DB, id string) error {
 	return db.Where("id = ?", id).Delete(users).Error
 
 }
-
-// Login authenticate user
-func Login(db *gorm.DB, t *User) error {
-	return db.Where("username = ? AND password = ?", t.Email, t.Password).First(t).Error
-}

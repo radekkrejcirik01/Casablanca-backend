@@ -13,6 +13,12 @@ type RegistrationResponse struct {
 	Data    *users.RegistrationDataResponse `json:"data,omitempty"`
 }
 
+type LoginResponse struct {
+	Status  string                   `json:"status"`
+	Message string                   `json:"message,omitempty"`
+	Data    *users.LoginDataResponse `json:"data,omitempty"`
+}
+
 type UserGetResponse struct {
 	Status  string        `json:"status"`
 	Message string        `json:"message,omitempty"`
