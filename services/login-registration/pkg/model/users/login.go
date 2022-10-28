@@ -3,14 +3,22 @@ package users
 import "gorm.io/gorm"
 
 type Login struct {
-	Id       uint   `json:""`
-	Email    string `json:""`
-	Password string `json:""`
+	Email     string `json:""`
+	Firstname string `json:""`
+	Birthday  string `json:""`
+	Gender    string `json:""`
+	ShowMe    string `json:""`
+	Password  string `json:""`
 }
 
 type LoginDataResponse struct {
-	Id    uint   `json:"id"`
-	Email string `json:"email"`
+	Email     string   `json:"email"`
+	Firstname string   `json:"firstname"`
+	Birthday  string   `json:"birthday"`
+	Photos    []string `json:"photos"`
+	Tags      []string `json:"tags"`
+	Gender    string   `json:"gender"`
+	ShowMe    string   `json:"showMe"`
 }
 
 // Login authenticate user

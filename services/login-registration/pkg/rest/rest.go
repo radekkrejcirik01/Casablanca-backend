@@ -15,9 +15,9 @@ func Create() *fiber.App {
 	app.Post("/login", controller.UserLogin)
 	app.Post("/tags", controller.AddTag)
 	app.Post("/photos", controller.AddTag)
-	app.Get("/:id", controller.UserGet)
+	app.Get("/get", controller.UserGet)
 	app.Put("/update", controller.UserPut)
-	app.Delete("/delete/:id", controller.UserDelete)
+	app.Delete("/delete", controller.UserDelete)
 
 	return app
 }

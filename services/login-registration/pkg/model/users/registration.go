@@ -5,7 +5,6 @@ import (
 )
 
 type Registration struct {
-	Id        uint           `gorm:"primary_key;auto_increment;not_null"`
 	Firstname string         `json:""`
 	Birthday  string         `json:""`
 	Photos    pq.StringArray `gorm:"type:text[]"`
@@ -17,6 +16,5 @@ type Registration struct {
 }
 
 type RegistrationDataResponse struct {
-	Id    uint   `json:"id"`
 	Email string `json:"email"`
 }

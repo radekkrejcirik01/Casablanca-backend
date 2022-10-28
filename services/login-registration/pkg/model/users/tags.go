@@ -6,7 +6,6 @@ import (
 )
 
 type Tags struct {
-	Id   uint           `gorm:"primary_key;auto_increment;not_null"`
 	User string         `json:""`
 	Tags pq.StringArray `gorm:"type:text[]"`
 }
@@ -25,7 +24,12 @@ func (Tag) TableName() string {
 func CreateTag(db *gorm.DB, t *Tags) error {
 	result := make([]Tag, 0)
 	for _, tag := range t.Tags {
-		result = append(result, Tag{Id: t.Id, User: t.User, Tag: tag})
+		result = append(result, Tag{User: t.User, Tag: tag})
 	}
 	return db.Create(result).Error
+}
+
+// Read Tags from DB by user
+func GetTags(db *gorm.DB, t *[]string, user string) error {
+	return db.Table("tags").Select("tag").Where("user = ?", user).Find(t).Error
 }

@@ -24,8 +24,8 @@ func CreateUser(db *gorm.DB, t *User) error {
 }
 
 // Read one User from DB by ID
-func ReadById(db *gorm.DB, t *User, id string) error {
-	return db.Where("id = ?", id).First(t).Error
+func ReadById(db *gorm.DB, t *User) error {
+	return db.Where("id = ?", t.Id).First(t).Error
 }
 
 // Read one User from DB by ID
@@ -49,11 +49,11 @@ func Delete(db *gorm.DB, t *User) error {
 }
 
 // DeleteByID one User by ID
-func DeleteById(db *gorm.DB, id string) error {
+func DeleteById(db *gorm.DB, t *User) error {
 	users := &User{}
-	if err := ReadById(db, users, id); err != nil {
+	if err := ReadById(db, t); err != nil {
 		return err
 	}
-	return db.Where("id = ?", id).Delete(users).Error
+	return db.Where("id = ?", t.Id).Delete(users).Error
 
 }
