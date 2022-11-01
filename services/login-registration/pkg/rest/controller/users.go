@@ -8,7 +8,7 @@ import (
 
 // UserRegister POST /register
 func UserRegister(c *fiber.Ctx) error {
-	t := &users.Registration{}
+	t := &users.UserRegistration{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -56,10 +56,9 @@ func UserRegister(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(RegistrationResponse{
+	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
 		Message: "User succesfully registered!",
-		Data:    &users.RegistrationDataResponse{Email: user.Email},
 	})
 }
 
@@ -109,7 +108,7 @@ func AddPhoto(c *fiber.Ctx) error {
 
 // UserLogin AUTHENTICATE /login
 func UserLogin(c *fiber.Ctx) error {
-	t := &users.Login{}
+	t := &users.User{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -118,9 +117,6 @@ func UserLogin(c *fiber.Ctx) error {
 		})
 	}
 
-	photos := &[]string{}
-	tags := &[]string{}
-
 	if err := users.LoginUser(database.DB, t); err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(Response{
 			Status:  "error",
@@ -128,24 +124,51 @@ func UserLogin(c *fiber.Ctx) error {
 		})
 	}
 
+	return GetUserResponse(c, t)
+}
+
+func UserGet(c *fiber.Ctx) error {
+	t := &users.User{}
+
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	if err := users.ReadByEmail(database.DB, t); err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return GetUserResponse(c, t)
+}
+
+func GetUserResponse(c *fiber.Ctx, t *users.User) error {
+	photos := &[]string{}
+	tags := &[]string{}
+
 	if err := users.GetPhotos(database.DB, photos, t.Email); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(UserGetResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 
 	if err := users.GetTags(database.DB, tags, t.Email); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(UserGetResponse{
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(LoginResponse{
+	return c.Status(fiber.StatusOK).JSON(UserResponse{
 		Status:  "succes",
 		Message: "User succesfully authenticated!",
-		Data: &users.LoginDataResponse{
+		Data: UserDataResponse{
 			Email:     t.Email,
 			Firstname: t.Firstname,
 			Birthday:  t.Birthday,
@@ -154,21 +177,6 @@ func UserLogin(c *fiber.Ctx) error {
 			Gender:    t.Gender,
 			ShowMe:    t.ShowMe,
 		},
-	})
-}
-
-// UserGet GET /:id
-func UserGet(c *fiber.Ctx) error {
-	t := &users.User{}
-	if err := users.ReadById(database.DB, t); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(UserGetResponse{
-			Status:  "error",
-			Message: err.Error(),
-		})
-	}
-	return c.Status(fiber.StatusOK).JSON(UserGetResponse{
-		Status: "succes",
-		Data:   &[]users.User{*t},
 	})
 }
 

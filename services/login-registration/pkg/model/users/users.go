@@ -1,11 +1,22 @@
 package users
 
 import (
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
+type UserRegistration struct {
+	Firstname string         `json:""`
+	Birthday  string         `json:""`
+	Photos    pq.StringArray `gorm:"type:text[]"`
+	Tags      pq.StringArray `gorm:"type:text[]"`
+	Gender    string         `json:""`
+	ShowMe    string         `json:""`
+	Email     string         `json:""`
+	Password  string         `json:""`
+}
+
 type User struct {
-	Id        uint   `gorm:"primary_key;auto_increment;not_null"`
 	Firstname string `json:"firstname"`
 	Birthday  string `json:"birthday"`
 	Gender    string `json:"gender"`
@@ -23,9 +34,9 @@ func CreateUser(db *gorm.DB, t *User) error {
 	return db.Create(t).Error
 }
 
-// Read one User from DB by ID
-func ReadById(db *gorm.DB, t *User) error {
-	return db.Where("id = ?", t.Id).First(t).Error
+// Login authenticate user
+func LoginUser(db *gorm.DB, t *User) error {
+	return db.Where("email = ? AND password = ?", t.Email, t.Password).First(t).Error
 }
 
 // Read one User from DB by ID
@@ -51,9 +62,9 @@ func Delete(db *gorm.DB, t *User) error {
 // DeleteByID one User by ID
 func DeleteById(db *gorm.DB, t *User) error {
 	users := &User{}
-	if err := ReadById(db, t); err != nil {
+	if err := ReadByEmail(db, t); err != nil {
 		return err
 	}
-	return db.Where("id = ?", t.Id).Delete(users).Error
+	return db.Where("email = ?", t.Email).Delete(users).Error
 
 }

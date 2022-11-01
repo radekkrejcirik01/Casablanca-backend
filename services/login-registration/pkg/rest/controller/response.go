@@ -1,26 +1,22 @@
 package controller
 
-import "github.com/radekkrejcirik01/Casblanca-backend/services/login-registration/pkg/model/users"
-
 type Response struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 }
 
-type RegistrationResponse struct {
-	Status  string                          `json:"status"`
-	Message string                          `json:"message,omitempty"`
-	Data    *users.RegistrationDataResponse `json:"data,omitempty"`
+type UserResponse struct {
+	Status  string           `json:"status"`
+	Message string           `json:"message,omitempty"`
+	Data    UserDataResponse `json:"data,omitempty"`
 }
 
-type LoginResponse struct {
-	Status  string                   `json:"status"`
-	Message string                   `json:"message,omitempty"`
-	Data    *users.LoginDataResponse `json:"data,omitempty"`
-}
-
-type UserGetResponse struct {
-	Status  string        `json:"status"`
-	Message string        `json:"message,omitempty"`
-	Data    *[]users.User `json:"data,omitempty"`
+type UserDataResponse struct {
+	Email     string   `json:"email"`
+	Firstname string   `json:"firstname"`
+	Birthday  string   `json:"birthday"`
+	Photos    []string `json:"photos"`
+	Tags      []string `json:"tags"`
+	Gender    string   `json:"gender"`
+	ShowMe    string   `json:"showMe"`
 }
