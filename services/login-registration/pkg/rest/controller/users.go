@@ -18,12 +18,17 @@ func UserRegister(c *fiber.Ctx) error {
 	}
 
 	user := &users.User{
-		Firstname: t.Firstname,
-		Birthday:  t.Birthday,
-		Gender:    t.Gender,
-		ShowMe:    t.ShowMe,
-		Email:     t.Email,
-		Password:  t.Password,
+		Id:            t.Id,
+		Firstname:     t.Firstname,
+		Birthday:      t.Birthday,
+		About:         t.About,
+		Gender:        t.Gender,
+		ShowMe:        t.ShowMe,
+		Email:         t.Email,
+		Distance:      t.Distance,
+		FilterByTags:  t.FilterByTags,
+		Notifications: t.Notifications,
+		Password:      t.Password,
 	}
 	tags := &users.Tags{User: t.Email, Tags: t.Tags}
 	photos := &users.Photos{User: t.Email, Photos: t.Photos}
@@ -169,13 +174,17 @@ func GetUserResponse(c *fiber.Ctx, t *users.User) error {
 		Status:  "succes",
 		Message: "User succesfully authenticated!",
 		Data: UserDataResponse{
-			Email:     t.Email,
-			Firstname: t.Firstname,
-			Birthday:  t.Birthday,
-			Photos:    *photos,
-			Tags:      *tags,
-			Gender:    t.Gender,
-			ShowMe:    t.ShowMe,
+			Email:         t.Email,
+			Firstname:     t.Firstname,
+			Birthday:      t.Birthday,
+			About:         t.About,
+			Photos:        *photos,
+			Tags:          *tags,
+			Gender:        t.Gender,
+			ShowMe:        t.ShowMe,
+			Distance:      t.Distance,
+			FilterByTags:  t.FilterByTags,
+			Notifications: t.Notifications,
 		},
 	})
 }

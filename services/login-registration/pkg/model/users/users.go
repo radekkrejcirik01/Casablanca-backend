@@ -6,23 +6,33 @@ import (
 )
 
 type UserRegistration struct {
-	Firstname string         `json:""`
-	Birthday  string         `json:""`
-	Photos    pq.StringArray `gorm:"type:text[]"`
-	Tags      pq.StringArray `gorm:"type:text[]"`
-	Gender    string         `json:""`
-	ShowMe    string         `json:""`
-	Email     string         `json:""`
-	Password  string         `json:""`
+	Id            uint `gorm:"primary_key;auto_increment;not_null"`
+	Firstname     string
+	Birthday      string
+	About         string
+	Photos        pq.StringArray
+	Tags          pq.StringArray
+	Gender        int
+	ShowMe        int
+	Email         string
+	Distance      int
+	FilterByTags  int
+	Notifications int
+	Password      string
 }
 
 type User struct {
-	Firstname string `json:"firstname"`
-	Birthday  string `json:"birthday"`
-	Gender    string `json:"gender"`
-	ShowMe    string `json:"showMe"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	Id            uint
+	Firstname     string
+	Birthday      string
+	About         string `gorm:"size:256"`
+	Gender        int
+	ShowMe        int
+	Email         string
+	Distance      int `gorm:"default:20"`
+	FilterByTags  int `gorm:"default:0"`
+	Notifications int `gorm:"default:1"`
+	Password      string
 }
 
 func (User) TableName() string {
