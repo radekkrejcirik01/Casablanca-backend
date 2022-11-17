@@ -13,10 +13,17 @@ func Create() *fiber.App {
 
 	app.Post("/register", controller.UserRegister)
 	app.Post("/login", controller.UserLogin)
-	app.Post("/tags", controller.AddTag)
-	app.Post("/photos", controller.AddTag)
+
+	app.Put("/photos/update", controller.UpdatePhotos)
+	app.Put("/tags/update", controller.UpdateTags)
+	app.Put("/about/update", controller.UpdateAbout)
+	app.Put("/notifications/update", controller.UpdateNotifications)
+	app.Put("/distance/update", controller.UpdateDistance)
+	app.Put("/filterByTags/update", controller.UpdateFilterByTags)
+	app.Put("/showMe/update", controller.UpdateShowMe)
+
 	app.Post("/get", controller.UserGet)
-	app.Put("/update", controller.UserPut)
+
 	app.Delete("/delete", controller.UserDelete)
 
 	return app

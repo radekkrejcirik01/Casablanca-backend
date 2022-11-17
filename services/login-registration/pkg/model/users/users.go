@@ -35,6 +35,31 @@ type User struct {
 	Password      string
 }
 
+type About struct {
+	Email string
+	About string
+}
+
+type Notifications struct {
+	Email         string
+	Notifications int
+}
+
+type Distance struct {
+	Email    string
+	Distance int
+}
+
+type FilterByTags struct {
+	Email        string
+	FilterByTags int
+}
+
+type ShowMe struct {
+	Email  string
+	ShowMe int
+}
+
 func (User) TableName() string {
 	return "users"
 }
@@ -49,19 +74,34 @@ func LoginUser(db *gorm.DB, t *User) error {
 	return db.Where("email = ? AND password = ?", t.Email, t.Password).First(t).Error
 }
 
-// Read one User from DB by ID
+// Read one user from DB by email
 func ReadByEmail(db *gorm.DB, t *User) error {
 	return db.Where("email = ?", t.Email).First(t).Error
 }
 
-// ReadAll User from DB
-func ReadAll(db *gorm.DB, t *[]User) error {
-	return db.Find(t).Error
+// Update about in users table in DB
+func UpdateAbout(db *gorm.DB, t *About) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("about", t.About).Error
 }
 
-// Update User in DB
-func Update(db *gorm.DB, t *User) error {
-	return db.Save(t).Error
+// Update notifications in users table in DB
+func UpdateNotifications(db *gorm.DB, t *Notifications) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("notifications", t.Notifications).Error
+}
+
+// Update distance in users table in DB
+func UpdateDistance(db *gorm.DB, t *Distance) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("distance", t.Distance).Error
+}
+
+// Update filterByTags in users table in DB
+func UpdateFilterByTags(db *gorm.DB, t *FilterByTags) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("filter_by_tags", t.FilterByTags).Error
+}
+
+// Update showMe in users table in DB
+func UpdateShowMe(db *gorm.DB, t *ShowMe) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("show_me", t.ShowMe).Error
 }
 
 // Delete User from DB

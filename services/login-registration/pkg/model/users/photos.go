@@ -20,8 +20,8 @@ func (Photo) TableName() string {
 	return "photos"
 }
 
-// Create new Photo in DB
-func CreatePhoto(db *gorm.DB, t *Photos) error {
+// Add new photos to DB
+func AddPhotos(db *gorm.DB, t *Photos) error {
 	result := make([]Photo, 0)
 	for _, photo := range t.Photos {
 		result = append(result, Photo{User: t.User, Photo: photo})
@@ -32,4 +32,21 @@ func CreatePhoto(db *gorm.DB, t *Photos) error {
 // Read Photos from DB by user
 func GetPhotos(db *gorm.DB, t *[]string, user string) error {
 	return db.Table("photos").Select("photo").Where("user = ?", user).Find(t).Error
+}
+
+// Update photos in DB by user
+func UpdatePhotos(db *gorm.DB, t *Photos) error {
+	photos := make([]Photo, 0)
+	for _, photo := range t.Photos {
+		photos = append(photos, Photo{User: t.User, Photo: photo})
+	}
+
+	if err := db.Table("photos").Where("user = ?", t.User).Delete(t).Error; err != nil {
+		return err
+	}
+	if err := db.Create(photos).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
