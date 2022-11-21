@@ -6,7 +6,7 @@ import (
 	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model"
 )
 
-// UpdatePhotos PUT /photos/update
+// GetUsers GET /get
 func GetUsers(c *fiber.Ctx) error {
 	t := &users.Users{}
 
