@@ -1,21 +1,28 @@
 package users
 
 import (
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
+type User struct {
+	ShowMe       int
+	Email        string
+	Distance     int
+	FilterByTags int
+	Tags         pq.StringArray
+}
+
 type Users struct {
-	Id            uint
-	Firstname     string
-	Birthday      string
-	About         string `gorm:"size:256"`
-	Gender        int
-	ShowMe        int
-	Email         string
-	Distance      int `gorm:"default:20"`
-	FilterByTags  int `gorm:"default:0"`
-	Notifications int `gorm:"default:1"`
-	Password      string
+	Id        uint
+	Email     string
+	Firstname string
+	Birthday  string
+	About     string
+	Photos    pq.StringArray
+	Tags      pq.StringArray
+	Gender    int
+	Distance  int
 }
 
 // Get users from DB for swiper

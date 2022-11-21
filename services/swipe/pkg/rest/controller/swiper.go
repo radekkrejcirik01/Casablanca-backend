@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/database"
+	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model"
 )
 
 // UpdatePhotos PUT /photos/update
@@ -21,8 +22,19 @@ func GetUsers(c *fiber.Ctx) error {
 			Message: err.Error(),
 		})
 	}
-	return c.Status(fiber.StatusOK).JSON(Response{
+	return c.Status(fiber.StatusOK).JSON(UserResponse{
 		Status:  "succes",
-		Message: "Users succesfully get!",
+		Message: "User succesfully get",
+		Data: UsersResponse{
+			Id:        t.Id,
+			Email:     t.Email,
+			Firstname: t.Firstname,
+			Birthday:  t.Birthday,
+			About:     t.About,
+			Photos:    t.Photos,
+			Tags:      t.Tags,
+			Gender:    t.Gender,
+			Distance:  t.Distance,
+		},
 	})
 }
