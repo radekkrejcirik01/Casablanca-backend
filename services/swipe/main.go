@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -15,9 +14,6 @@ var fiberLambda *fiberadapter.FiberLambda
 
 func init() {
 	database.Connect()
-	if err := database.DB.AutoMigrate(); err != nil {
-		log.Fatal(err)
-	}
 
 	fiberLambda = fiberadapter.New(rest.Create())
 }
