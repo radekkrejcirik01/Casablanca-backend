@@ -8,7 +8,7 @@ import (
 
 // GetUsers GET /get
 func GetUsers(c *fiber.Ctx) error {
-	t := &users.Users{}
+	t := &users.User{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -16,25 +16,18 @@ func GetUsers(c *fiber.Ctx) error {
 			Message: err.Error(),
 		})
 	}
-	if err := users.GetUsers(database.DB, t); err != nil {
+
+	users, err := users.GetUsers(database.DB, t)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
 			Message: err.Error(),
 		})
 	}
+
 	return c.Status(fiber.StatusOK).JSON(UserResponse{
 		Status:  "succes",
-		Message: "User succesfully get",
-		Data: UsersResponse{
-			Id:        t.Id,
-			Email:     t.Email,
-			Firstname: t.Firstname,
-			Birthday:  t.Birthday,
-			About:     t.About,
-			Photos:    t.Photos,
-			Tags:      t.Tags,
-			Gender:    t.Gender,
-			Distance:  t.Distance,
-		},
+		Message: "Users succesfully get",
+		Data:    users,
 	})
 }
