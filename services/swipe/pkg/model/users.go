@@ -33,12 +33,35 @@ type Tag struct {
 
 // Get users from DB for swiper
 func GetUsers(db *gorm.DB, t *User) ([]User, error) {
-	queryUsers := "SELECT * FROM users WHERE distance <= " + strconv.Itoa(t.Distance)
+	query := "SELECT * FROM users WHERE distance <= " + strconv.Itoa(t.Distance)
 	if t.ShowMe != 2 {
-		queryUsers += " AND gender = " + strconv.Itoa(t.ShowMe)
+		query += " AND gender = " + strconv.Itoa(t.ShowMe)
 	}
 
-	rows, err := db.Raw(queryUsers).Rows()
+	users, err := GetUsersFromQuery(db, query)
+	if err != nil {
+		return nil, err
+	}
+
+	users, err = getPhotosByUsers(db, users)
+	if err != nil {
+		return nil, err
+	}
+
+	users, err = getTagsByUsers(db, users)
+	if err != nil {
+		return nil, err
+	}
+
+	if t.FilterByTags == 1 {
+		users = FilterUsersByTags(t, users)
+	}
+
+	return users, nil
+}
+
+func GetUsersFromQuery(db *gorm.DB, query string) ([]User, error) {
+	rows, err := db.Raw(query).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -50,32 +73,10 @@ func GetUsers(db *gorm.DB, t *User) ([]User, error) {
 		db.ScanRows(rows, &users)
 	}
 
-	users, err = getPhotos(db, users)
-	if err != nil {
-		return nil, err
-	}
-
-	users, err = getTags(db, users)
-	if err != nil {
-		return nil, err
-	}
-
-	if t.FilterByTags == 1 {
-		var arr []User
-		for _, user := range users {
-			containsTags := contains(t.Tags, user.Tags)
-
-			if containsTags {
-				arr = append(arr, user)
-			}
-		}
-		users = arr
-	}
-
 	return users, nil
 }
 
-func getPhotos(db *gorm.DB, users []User) ([]User, error) {
+func getPhotosByUsers(db *gorm.DB, users []User) ([]User, error) {
 	var emails []string
 	for _, user := range users {
 		emails = append(emails, "'"+user.Email+"'")
@@ -111,7 +112,7 @@ func getPhotos(db *gorm.DB, users []User) ([]User, error) {
 	return users, nil
 }
 
-func getTags(db *gorm.DB, users []User) ([]User, error) {
+func getTagsByUsers(db *gorm.DB, users []User) ([]User, error) {
 	var emails []string
 	for _, user := range users {
 		emails = append(emails, "'"+user.Email+"'")
@@ -145,6 +146,19 @@ func getTags(db *gorm.DB, users []User) ([]User, error) {
 	}
 
 	return users, nil
+}
+
+func FilterUsersByTags(t *User, users []User) []User {
+	var arr []User
+	for _, user := range users {
+		containsTags := contains(t.Tags, user.Tags)
+
+		if containsTags {
+			arr = append(arr, user)
+		}
+	}
+
+	return arr
 }
 
 func contains(s []string, e []string) bool {
