@@ -12,15 +12,16 @@ type UserResponse struct {
 }
 
 type UserDataResponse struct {
-	Email         string   `json:"email"`
-	Firstname     string   `json:"firstname"`
-	Birthday      string   `json:"birthday"`
-	About         string   `json:"about"`
-	Photos        []string `json:"photos"`
-	Tags          []string `json:"tags"`
-	Gender        int      `json:"gender"`
-	ShowMe        int      `json:"showMe"`
-	Distance      int      `json:"distance"`
-	FilterByTags  int      `json:"filterByTags"`
-	Notifications int      `json:"notifications"`
+	Email              string   `json:"email"`
+	Firstname          string   `json:"firstname"`
+	Birthday           string   `json:"birthday"`
+	About              string   `json:"about"`
+	Photos             []string `json:"photos"`
+	Tags               []string `json:"tags"`
+	Gender             int      `json:"gender"`
+	ShowMe             int      `json:"showMe"`
+	DistancePreference int      `json:"distancePreference"`
+	AgePreference      string   `json:"agePreference"`
+	FilterByTags       int      `json:"filterByTags"`
+	Notifications      int      `json:"notifications"`
 }

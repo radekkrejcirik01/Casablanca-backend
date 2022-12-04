@@ -18,17 +18,18 @@ func UserRegister(c *fiber.Ctx) error {
 	}
 
 	user := &users.User{
-		Id:            t.Id,
-		Firstname:     t.Firstname,
-		Birthday:      t.Birthday,
-		About:         t.About,
-		Gender:        t.Gender,
-		ShowMe:        t.ShowMe,
-		Email:         t.Email,
-		Distance:      t.Distance,
-		FilterByTags:  t.FilterByTags,
-		Notifications: t.Notifications,
-		Password:      t.Password,
+		Id:                 t.Id,
+		Firstname:          t.Firstname,
+		Birthday:           t.Birthday,
+		About:              t.About,
+		Gender:             t.Gender,
+		ShowMe:             t.ShowMe,
+		Email:              t.Email,
+		DistancePreference: t.DistancePreference,
+		AgePreference:      t.AgePreference,
+		FilterByTags:       t.FilterByTags,
+		Notifications:      t.Notifications,
+		Password:           t.Password,
 	}
 	tags := &users.Tags{User: t.Email, Tags: t.Tags}
 	photos := &users.Photos{User: t.Email, Photos: t.Photos}
@@ -130,17 +131,18 @@ func GetUserResponse(c *fiber.Ctx, t *users.User) error {
 		Status:  "succes",
 		Message: "User succesfully authenticated!",
 		Data: UserDataResponse{
-			Email:         t.Email,
-			Firstname:     t.Firstname,
-			Birthday:      t.Birthday,
-			About:         t.About,
-			Photos:        *photos,
-			Tags:          *tags,
-			Gender:        t.Gender,
-			ShowMe:        t.ShowMe,
-			Distance:      t.Distance,
-			FilterByTags:  t.FilterByTags,
-			Notifications: t.Notifications,
+			Email:              t.Email,
+			Firstname:          t.Firstname,
+			Birthday:           t.Birthday,
+			About:              t.About,
+			Photos:             *photos,
+			Tags:               *tags,
+			Gender:             t.Gender,
+			ShowMe:             t.ShowMe,
+			DistancePreference: t.DistancePreference,
+			AgePreference:      t.AgePreference,
+			FilterByTags:       t.FilterByTags,
+			Notifications:      t.Notifications,
 		},
 	})
 }
@@ -230,16 +232,16 @@ func UpdateNotifications(c *fiber.Ctx) error {
 	})
 }
 
-// UpdateDistance PUT /distance/update
-func UpdateDistance(c *fiber.Ctx) error {
-	t := &users.Distance{}
+// UpdateDistancePreference PUT /distancePreference/update
+func UpdateDistancePreference(c *fiber.Ctx) error {
+	t := &users.DistancePreference{}
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
 			Message: err.Error(),
 		})
 	}
-	if err := users.UpdateDistance(database.DB, t); err != nil {
+	if err := users.UpdateDistancePreference(database.DB, t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
 			Message: err.Error(),
@@ -247,7 +249,28 @@ func UpdateDistance(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
-		Message: "Distance succesfully updated!",
+		Message: "Distance preference succesfully updated!",
+	})
+}
+
+// UpdateAgePreference PUT /distancePreference/update
+func UpdateAgePreference(c *fiber.Ctx) error {
+	t := &users.AgePreference{}
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+	if err := users.UpdateAgePreference(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(Response{
+		Status:  "succes",
+		Message: "Age preference succesfully updated!",
 	})
 }
 

@@ -6,33 +6,35 @@ import (
 )
 
 type UserRegistration struct {
-	Id            uint `gorm:"primary_key;auto_increment;not_null"`
-	Firstname     string
-	Birthday      string
-	About         string
-	Photos        pq.StringArray
-	Tags          pq.StringArray
-	Gender        int
-	ShowMe        int
-	Email         string
-	Distance      int
-	FilterByTags  int
-	Notifications int
-	Password      string
+	Id                 uint `gorm:"primary_key;auto_increment;not_null"`
+	Firstname          string
+	Birthday           string
+	About              string
+	Photos             pq.StringArray
+	Tags               pq.StringArray
+	Gender             int
+	ShowMe             int
+	Email              string
+	DistancePreference int
+	AgePreference      string
+	FilterByTags       int
+	Notifications      int
+	Password           string
 }
 
 type User struct {
-	Id            uint
-	Firstname     string
-	Birthday      string
-	About         string `gorm:"size:256"`
-	Gender        int
-	ShowMe        int
-	Email         string
-	Distance      int `gorm:"default:20"`
-	FilterByTags  int `gorm:"default:0"`
-	Notifications int `gorm:"default:1"`
-	Password      string
+	Id                 uint
+	Firstname          string
+	Birthday           string
+	About              string `gorm:"size:256"`
+	Gender             int
+	ShowMe             int
+	Email              string
+	DistancePreference int `gorm:"default:20"`
+	AgePreference      string
+	FilterByTags       int `gorm:"default:0"`
+	Notifications      int `gorm:"default:1"`
+	Password           string
 }
 
 type About struct {
@@ -45,9 +47,14 @@ type Notifications struct {
 	Notifications int
 }
 
-type Distance struct {
-	Email    string
-	Distance int
+type DistancePreference struct {
+	Email              string
+	DistancePreference int
+}
+
+type AgePreference struct {
+	Email         string
+	AgePreference string
 }
 
 type FilterByTags struct {
@@ -89,9 +96,14 @@ func UpdateNotifications(db *gorm.DB, t *Notifications) error {
 	return db.Table("users").Where("email = ?", t.Email).Update("notifications", t.Notifications).Error
 }
 
-// Update distance in users table in DB
-func UpdateDistance(db *gorm.DB, t *Distance) error {
-	return db.Table("users").Where("email = ?", t.Email).Update("distance", t.Distance).Error
+// Update distance preference in users table in DB
+func UpdateDistancePreference(db *gorm.DB, t *DistancePreference) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("distance_preference", t.DistancePreference).Error
+}
+
+// Update age preference in users table in DB
+func UpdateAgePreference(db *gorm.DB, t *AgePreference) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("age_preference", t.AgePreference).Error
 }
 
 // Update filterByTags in users table in DB

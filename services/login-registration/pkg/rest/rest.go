@@ -18,7 +18,8 @@ func Create() *fiber.App {
 	app.Put("/tags/update", controller.UpdateTags)
 	app.Put("/about/update", controller.UpdateAbout)
 	app.Put("/notifications/update", controller.UpdateNotifications)
-	app.Put("/distance/update", controller.UpdateDistance)
+	app.Put("/distancePreference/update", controller.UpdateDistancePreference)
+	app.Put("/agePreference/update", controller.UpdateAgePreference)
 	app.Put("/filterByTags/update", controller.UpdateFilterByTags)
 	app.Put("/showMe/update", controller.UpdateShowMe)
 
