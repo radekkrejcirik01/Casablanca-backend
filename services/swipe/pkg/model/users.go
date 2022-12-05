@@ -3,22 +3,24 @@ package users
 import (
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	Email        string
-	Firstname    string
-	Birthday     string
-	About        string
-	Photos       pq.StringArray
-	Tags         pq.StringArray
-	Gender       int
-	Distance     int
-	ShowMe       int
-	FilterByTags int
+	Email              string
+	Firstname          string
+	Birthday           string
+	About              string
+	Photos             pq.StringArray
+	Tags               pq.StringArray
+	Gender             int
+	DistancePreference int
+	AgePreference      string
+	ShowMe             int
+	FilterByTags       int
 }
 
 type Photo struct {
@@ -33,10 +35,13 @@ type Tag struct {
 
 // Get users from DB for swiper
 func GetUsers(db *gorm.DB, t *User) ([]User, error) {
-	query := "SELECT * FROM users WHERE distance <= " + strconv.Itoa(t.Distance)
+	query := "SELECT * FROM users WHERE distance_preference <= " + strconv.Itoa(t.DistancePreference)
 	if t.ShowMe != 2 {
 		query += " AND gender = " + strconv.Itoa(t.ShowMe)
 	}
+
+	minDate, maxDate := GetAgePreferences(t.AgePreference)
+	query += " AND birthday > '" + minDate + "' AND birthday <= '" + maxDate + "'"
 
 	users, err := GetUsersFromQuery(db, query)
 	if err != nil {
@@ -58,6 +63,28 @@ func GetUsers(db *gorm.DB, t *User) ([]User, error) {
 	}
 
 	return users, nil
+}
+
+func GetAgePreferences(agePreference string) (minDate string, maxDate string) {
+	agePreference1, _ := strconv.Atoi(agePreference)
+	agePreference2, _ := strconv.Atoi(agePreference)
+
+	if strings.Contains(agePreference, "-") {
+		agePreference1, _ = strconv.Atoi(agePreference[0:2])
+		agePreference2, _ = strconv.Atoi(agePreference[3:5])
+	}
+
+	t := time.Now()
+	today := t.Format("2006-01-02")
+	year, _ := strconv.Atoi(today[0:4])
+
+	minYear := year - agePreference2 - 1
+	maxYear := year - agePreference1
+
+	minDate = strings.Replace(today, today[0:4], strconv.Itoa(minYear), -1)
+	maxDate = strings.Replace(today, today[0:4], strconv.Itoa(maxYear), -1)
+
+	return minDate, maxDate
 }
 
 func GetUsersFromQuery(db *gorm.DB, query string) ([]User, error) {
