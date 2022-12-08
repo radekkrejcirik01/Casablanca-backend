@@ -10,7 +10,7 @@ type Response struct {
 }
 
 type UserResponse struct {
-	Status  string       `json:"status"`
-	Message string       `json:"message,omitempty"`
-	Data    []users.User `json:"data,omitempty"`
+	Status  string           `json:"status"`
+	Message string           `json:"message,omitempty"`
+	Data    []users.UserData `json:"data,omitempty"`
 }

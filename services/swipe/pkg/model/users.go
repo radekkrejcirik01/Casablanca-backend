@@ -33,8 +33,17 @@ type Tag struct {
 	Tag  string
 }
 
+type UserData struct {
+	Email     string   `json:"email"`
+	Firstname string   `json:"firstname"`
+	Birthday  string   `json:"birthday"`
+	About     string   `json:"about"`
+	Photos    []string `json:"photos"`
+	Tags      []string `json:"tags"`
+}
+
 // Get users from DB for swiper
-func GetUsers(db *gorm.DB, t *User) ([]User, error) {
+func GetUsers(db *gorm.DB, t *User) ([]UserData, error) {
 	query := "SELECT * FROM users WHERE distance_preference <= " + strconv.Itoa(t.DistancePreference)
 	if t.ShowMe != 2 {
 		query += " AND gender = " + strconv.Itoa(t.ShowMe)
@@ -87,7 +96,7 @@ func GetAgePreferences(agePreference string) (minDate string, maxDate string) {
 	return minDate, maxDate
 }
 
-func GetUsersFromQuery(db *gorm.DB, query string) ([]User, error) {
+func GetUsersFromQuery(db *gorm.DB, query string) ([]UserData, error) {
 	rows, err := db.Raw(query).Rows()
 	if err != nil {
 		return nil, err
@@ -95,7 +104,7 @@ func GetUsersFromQuery(db *gorm.DB, query string) ([]User, error) {
 
 	defer rows.Close()
 
-	var users []User
+	var users []UserData
 	for rows.Next() {
 		db.ScanRows(rows, &users)
 	}
@@ -103,7 +112,7 @@ func GetUsersFromQuery(db *gorm.DB, query string) ([]User, error) {
 	return users, nil
 }
 
-func getPhotosByUsers(db *gorm.DB, users []User) ([]User, error) {
+func getPhotosByUsers(db *gorm.DB, users []UserData) ([]UserData, error) {
 	var emails []string
 	for _, user := range users {
 		emails = append(emails, "'"+user.Email+"'")
@@ -139,7 +148,7 @@ func getPhotosByUsers(db *gorm.DB, users []User) ([]User, error) {
 	return users, nil
 }
 
-func getTagsByUsers(db *gorm.DB, users []User) ([]User, error) {
+func getTagsByUsers(db *gorm.DB, users []UserData) ([]UserData, error) {
 	var emails []string
 	for _, user := range users {
 		emails = append(emails, "'"+user.Email+"'")
@@ -175,8 +184,8 @@ func getTagsByUsers(db *gorm.DB, users []User) ([]User, error) {
 	return users, nil
 }
 
-func FilterUsersByTags(t *User, users []User) []User {
-	var arr []User
+func FilterUsersByTags(t *User, users []UserData) []UserData {
+	var arr []UserData
 	for _, user := range users {
 		containsTags := contains(t.Tags, user.Tags)
 
