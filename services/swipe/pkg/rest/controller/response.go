@@ -1,7 +1,7 @@
 package controller
 
 import (
-	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model"
+	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model/users"
 )
 
 type Response struct {

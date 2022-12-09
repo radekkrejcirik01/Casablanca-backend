@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/database"
-	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model"
+	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model/users"
 )
 
 // GetUsers GET /get
@@ -29,5 +29,28 @@ func GetUsers(c *fiber.Ctx) error {
 		Status:  "succes",
 		Message: "Users succesfully get",
 		Data:    users,
+	})
+}
+
+func LikeUser(c *fiber.Ctx) error {
+	t := &users.Like{}
+
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	if err := users.LikeUser(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(UserResponse{
+		Status:  "succes",
+		Message: "User succesfully liked",
 	})
 }
