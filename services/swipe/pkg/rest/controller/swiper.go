@@ -6,7 +6,7 @@ import (
 	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model/users"
 )
 
-// GetUsers GET /get
+// GetUsers POST /get
 func GetUsers(c *fiber.Ctx) error {
 	t := &users.User{}
 
@@ -32,6 +32,7 @@ func GetUsers(c *fiber.Ctx) error {
 	})
 }
 
+// LikeUser POST /like
 func LikeUser(c *fiber.Ctx) error {
 	t := &users.Like{}
 
@@ -49,8 +50,14 @@ func LikeUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(UserResponse{
+	value := "0"
+	if t.Value == 1 {
+		value = "1"
+	}
+
+	return c.Status(fiber.StatusOK).JSON(LikeResponse{
 		Status:  "succes",
-		Message: "User succesfully liked",
+		Message: "Like succesfully perfomed",
+		Value:   value,
 	})
 }

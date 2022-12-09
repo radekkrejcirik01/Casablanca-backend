@@ -14,3 +14,9 @@ type UserResponse struct {
 	Message string           `json:"message,omitempty"`
 	Data    []users.UserData `json:"data,omitempty"`
 }
+
+type LikeResponse struct {
+	Status  string `json:"status"`
+	Message string `json:"message,omitempty"`
+	Value   string `json:"value,omitempty"`
+}

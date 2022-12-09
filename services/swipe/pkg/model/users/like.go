@@ -14,5 +14,5 @@ func (Like) TableName() string {
 
 // LikeUser like user
 func LikeUser(db *gorm.DB, t *Like) error {
-	return db.Save(t).Error
+	return db.Where("email = ? AND user = ?", t.Email, t.User).Save(t).Error
 }
