@@ -44,13 +44,15 @@ type UserData struct {
 
 // Get users from DB for swiper
 func GetUsers(db *gorm.DB, t *User) ([]UserData, error) {
-	query := "SELECT * FROM users WHERE distance_preference <= " + strconv.Itoa(t.DistancePreference)
+	query := `SELECT * FROM users WHERE email != '` + t.Email +
+		`' AND distance_preference <= ` + strconv.Itoa(t.DistancePreference)
+
 	if t.ShowMe != 2 {
-		query += " AND gender = " + strconv.Itoa(t.ShowMe)
+		query += ` AND gender = ` + strconv.Itoa(t.ShowMe)
 	}
 
 	minDate, maxDate := GetAgePreferences(t.AgePreference)
-	query += " AND birthday > '" + minDate + "' AND birthday <= '" + maxDate + "'"
+	query += ` AND birthday > '` + minDate + `' AND birthday <= '` + maxDate + `'`
 
 	users, err := GetUsersFromQuery(db, query)
 	if err != nil {
