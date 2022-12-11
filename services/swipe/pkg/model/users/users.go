@@ -45,7 +45,8 @@ type UserData struct {
 // Get users from DB for swiper
 func GetUsers(db *gorm.DB, t *User) ([]UserData, error) {
 	query := `SELECT * FROM users WHERE email != '` + t.Email +
-		`' AND distance_preference <= ` + strconv.Itoa(t.DistancePreference)
+		`' AND email NOT IN (SELECT user FROM likes WHERE email = '` + t.Email +
+		`') AND distance_preference <= ` + strconv.Itoa(t.DistancePreference)
 
 	if t.ShowMe != 2 {
 		query += ` AND gender = ` + strconv.Itoa(t.ShowMe)
