@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/database"
 	users "github.com/radekkrejcirik01/Casblanca-backend/services/swipe/pkg/model/users"
@@ -50,14 +52,9 @@ func LikeUser(c *fiber.Ctx) error {
 		})
 	}
 
-	value := "0"
-	if t.Value == 1 {
-		value = "1"
-	}
-
 	return c.Status(fiber.StatusOK).JSON(LikeResponse{
 		Status:  "succes",
 		Message: "Like succesfully perfomed",
-		Value:   value,
+		Value:   strconv.Itoa(t.Value),
 	})
 }
