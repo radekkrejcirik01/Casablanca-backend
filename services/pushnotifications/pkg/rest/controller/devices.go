@@ -1,14 +1,12 @@
 package controller
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/database"
-	devices "github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/model/devices"
+	devices "github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/model"
 )
 
-func SaveDevice()(c *fiber.Ctx) error {
+func SaveDevice(c *fiber.Ctx) error {
 	t := &devices.Device{}
 
 	if err := c.BodyParser(t); err != nil {
