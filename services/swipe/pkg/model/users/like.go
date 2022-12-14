@@ -15,5 +15,8 @@ func (Like) TableName() string {
 
 // LikeUser like user
 func LikeUser(db *gorm.DB, t *Like) error {
-	return db.Where("email = ? AND user = ?", t.Email, t.User).Save(t).Error
+	if db.Model(&t).Where("email = ? AND user = ?", t.Email, t.User).Update("value", t.Value).RowsAffected == 0 {
+		return db.Create(t).Error
+	}
+	return nil
 }
