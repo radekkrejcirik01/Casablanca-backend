@@ -11,5 +11,7 @@ func Create() *fiber.App {
 
 	app.Get("/", controller.Index)
 
+	app.Post("/registerDevice", controller.SaveDevice)
+
 	return app
 }

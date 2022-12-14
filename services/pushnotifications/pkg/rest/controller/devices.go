@@ -25,6 +25,6 @@ func SaveDevice(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
-		Message: "Device succesfully perfomed",
+		Message: "Device succesfully saved",
 	})
 }
