@@ -3,6 +3,7 @@ package users
 import "gorm.io/gorm"
 
 type Like struct {
+	Id    uint `gorm:"primary_key;auto_increment;not_null"`
 	Email string
 	User  string
 	Value int
