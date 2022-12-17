@@ -1,8 +1,6 @@
 package users
 
 import (
-	"time"
-
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -21,7 +19,7 @@ type UserRegistration struct {
 	AgePreference      string
 	FilterByTags       int
 	Notifications      int
-	LastActive         time.Time
+	LastActive         string
 	Password           string
 }
 
@@ -35,9 +33,9 @@ type User struct {
 	ShowMe             int
 	DistancePreference int `gorm:"default:20"`
 	AgePreference      string
-	FilterByTags       int       `gorm:"default:0"`
-	Notifications      int       `gorm:"default:1"`
-	LastActive         time.Time `gorm:"autoCreateTime"`
+	FilterByTags       int `gorm:"default:0"`
+	Notifications      int `gorm:"default:1"`
+	LastActive         string
 	Password           string
 }
 
@@ -69,6 +67,11 @@ type FilterByTags struct {
 type ShowMe struct {
 	Email  string
 	ShowMe int
+}
+
+type LastActive struct {
+	Email      string
+	LastActive string
 }
 
 func (User) TableName() string {
@@ -118,6 +121,11 @@ func UpdateFilterByTags(db *gorm.DB, t *FilterByTags) error {
 // Update showMe in users table in DB
 func UpdateShowMe(db *gorm.DB, t *ShowMe) error {
 	return db.Table("users").Where("email = ?", t.Email).Update("show_me", t.ShowMe).Error
+}
+
+// Update lastActive in users table in DB
+func UpdateLastActive(db *gorm.DB, t *LastActive) error {
+	return db.Table("users").Where("email = ?", t.Email).Update("last_active", t.LastActive).Error
 }
 
 // Delete User from DB

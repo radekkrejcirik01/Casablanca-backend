@@ -22,6 +22,7 @@ func Create() *fiber.App {
 	app.Put("/agePreference/update", controller.UpdateAgePreference)
 	app.Put("/filterByTags/update", controller.UpdateFilterByTags)
 	app.Put("/showMe/update", controller.UpdateShowMe)
+	app.Put("/lastActive/update", controller.UpdateLastActive)
 
 	app.Post("/get", controller.UserGet)
 

@@ -29,6 +29,7 @@ func UserRegister(c *fiber.Ctx) error {
 		AgePreference:      t.AgePreference,
 		FilterByTags:       t.FilterByTags,
 		Notifications:      t.Notifications,
+		LastActive:         t.LastActive,
 		Password:           t.Password,
 	}
 	tags := &users.Tags{User: t.Email, Tags: t.Tags}
@@ -313,6 +314,27 @@ func UpdateShowMe(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
 		Message: "ShowMe succesfully updated!",
+	})
+}
+
+// UpdateLastActive PUT /lastActive/update
+func UpdateLastActive(c *fiber.Ctx) error {
+	t := &users.LastActive{}
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+	if err := users.UpdateLastActive(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(Response{
+		Status:  "succes",
+		Message: "LastActive succesfully updated!",
 	})
 }
 
