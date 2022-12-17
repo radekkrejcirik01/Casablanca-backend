@@ -13,17 +13,16 @@ func (Device) TableName() string {
 }
 
 func SaveDevice(db *gorm.DB, t *Device) error {
-	entries := GetNumberOfEntries(db, t)
-	if entries > 0 {
-		return db.Model(&t).Where("email = ?", t.Email).Update("device_token", t.DeviceToken).Error
-	} else {
+	exists := GetEntryByToken(db, t.DeviceToken)
+	if !exists {
 		return db.Create(t).Error
 	}
+	return nil
 }
 
-func GetNumberOfEntries(db *gorm.DB, t *Device) int {
-	query := `SELECT COUNT(*) FROM devices WHERE email = '` + t.Email + `'`
-	var result int
-	db.Raw(query).Scan(&result)
-	return result
+func GetEntryByToken(db *gorm.DB, token string) bool {
+	var exists bool
+	db.Table("devices").Select("count(*) > 0").Where("device_token = ?", token).Find(&exists)
+
+	return exists
 }
