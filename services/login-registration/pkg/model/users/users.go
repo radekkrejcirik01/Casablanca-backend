@@ -1,12 +1,15 @@
 package users
 
 import (
+	"time"
+
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
 type UserRegistration struct {
 	Id                 uint `gorm:"primary_key;auto_increment;not_null"`
+	Email              string
 	Firstname          string
 	Birthday           string
 	About              string
@@ -14,26 +17,27 @@ type UserRegistration struct {
 	Tags               pq.StringArray
 	Gender             int
 	ShowMe             int
-	Email              string
 	DistancePreference int
 	AgePreference      string
 	FilterByTags       int
 	Notifications      int
+	LastActive         time.Time
 	Password           string
 }
 
 type User struct {
 	Id                 uint
+	Email              string
 	Firstname          string
 	Birthday           string
 	About              string `gorm:"size:256"`
 	Gender             int
 	ShowMe             int
-	Email              string
 	DistancePreference int `gorm:"default:20"`
 	AgePreference      string
-	FilterByTags       int `gorm:"default:0"`
-	Notifications      int `gorm:"default:1"`
+	FilterByTags       int       `gorm:"default:0"`
+	Notifications      int       `gorm:"default:1"`
+	LastActive         time.Time `gorm:"autoCreateTime"`
 	Password           string
 }
 
