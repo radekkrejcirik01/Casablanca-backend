@@ -55,6 +55,8 @@ func GetUsers(db *gorm.DB, t *User) ([]UserData, error) {
 	minDate, maxDate := GetAgePreferences(t.AgePreference)
 	query += ` AND birthday > '` + minDate + `' AND birthday <= '` + maxDate + `'`
 
+	query += ` ORDER BY last_active DESC`
+
 	users, err := GetUsersFromQuery(db, query)
 	if err != nil {
 		return nil, err
