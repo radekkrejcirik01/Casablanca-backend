@@ -34,12 +34,13 @@ type Tag struct {
 }
 
 type UserData struct {
-	Email     string   `json:"email"`
-	Firstname string   `json:"firstname"`
-	Birthday  string   `json:"birthday"`
-	About     string   `json:"about"`
-	Photos    []string `json:"photos"`
-	Tags      []string `json:"tags"`
+	Email      string   `json:"email"`
+	Firstname  string   `json:"firstname"`
+	Birthday   string   `json:"birthday"`
+	About      string   `json:"about"`
+	Photos     []string `json:"photos"`
+	Tags       []string `json:"tags"`
+	LastActive string   `json:"lastActive"`
 }
 
 // Get users from DB for swiper
