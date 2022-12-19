@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
 	"github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/database"
-	devices "github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/model"
+	devices "github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/model/devices"
 	"github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/rest"
 )
 

@@ -12,6 +12,7 @@ func Create() *fiber.App {
 	app.Get("/", controller.Index)
 
 	app.Post("/registerDevice", controller.SaveDevice)
+	app.Post("/notify", controller.SendToDevice)
 
 	return app
 }
