@@ -11,5 +11,8 @@ func Create() *fiber.App {
 
 	app.Get("/", controller.Index)
 
+	app.Post("/get/matches", controller.GetMatches)
+	app.Post("/get/messages/:offset", controller.GetMessages)
+
 	return app
 }
