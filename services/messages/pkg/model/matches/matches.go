@@ -3,6 +3,7 @@ package matches
 import (
 	"strings"
 
+	"github.com/radekkrejcirik01/Casblanca-backend/services/messages/pkg/model/helpers"
 	"gorm.io/gorm"
 )
 
@@ -29,7 +30,7 @@ type Matched struct {
 
 // GetMatches get matches
 func GetMatches(db *gorm.DB, t *User, page string) ([]Matched, error) {
-	offset := helpers.getOffset(page)
+	offset := helpers.GetOffset(page)
 
 	matchedUsersQuery := `SELECT
 							T1.email,

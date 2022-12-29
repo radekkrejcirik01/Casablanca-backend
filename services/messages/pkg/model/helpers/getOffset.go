@@ -2,7 +2,7 @@ package helpers
 
 import "strconv"
 
-func getOffset(page string) string {
+func GetOffset(page string) string {
 	pageNumber, err := strconv.Atoi(page)
 	if err != nil {
 		return "0"

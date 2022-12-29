@@ -1,6 +1,7 @@
 package messages
 
 import (
+	"github.com/radekkrejcirik01/Casblanca-backend/services/messages/pkg/model/helpers"
 	"gorm.io/gorm"
 )
 
@@ -31,7 +32,7 @@ type ConversationList struct {
 
 // GetMessages get messages
 func GetMessages(db *gorm.DB, t *User, page string) ([]ConversationList, error) {
-	offset := getOffset(page)
+	offset := helpers.GetOffset(page)
 
 	messagedUsersQuery := `SELECT
 								sender,
