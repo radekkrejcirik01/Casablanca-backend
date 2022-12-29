@@ -12,7 +12,7 @@ func Create() *fiber.App {
 	app.Get("/", controller.Index)
 
 	app.Post("/get/matches/:page", controller.GetMatches)
-	app.Post("/get/messages/:page", controller.GetMessages)
+	app.Post("/get/conversations/:page", controller.GetConversations)
 
 	return app
 }

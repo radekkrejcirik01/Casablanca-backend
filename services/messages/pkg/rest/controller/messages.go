@@ -6,11 +6,11 @@ import (
 	messages "github.com/radekkrejcirik01/Casblanca-backend/services/messages/pkg/model/messages"
 )
 
-// GetMessages POST /get/messages/:page
-func GetMessages(c *fiber.Ctx) error {
+// GetConversations POST /get/conversations/:page
+func GetConversations(c *fiber.Ctx) error {
 	page := c.Params("page")
 
-	t := &messages.User{}
+	t := &messages.Email{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -19,7 +19,7 @@ func GetMessages(c *fiber.Ctx) error {
 		})
 	}
 
-	conversationList, err := messages.GetMessages(database.DB, t, page)
+	conversationList, err := messages.GetConversationsList(database.DB, t, page)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
