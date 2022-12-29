@@ -6,9 +6,9 @@ import (
 	messages "github.com/radekkrejcirik01/Casblanca-backend/services/messages/pkg/model/messages"
 )
 
-// GetMessages POST /get/messages/:offset
+// GetMessages POST /get/messages/:page
 func GetMessages(c *fiber.Ctx) error {
-	offset := c.Params("offset")
+	page := c.Params("page")
 
 	t := &messages.User{}
 
@@ -19,7 +19,7 @@ func GetMessages(c *fiber.Ctx) error {
 		})
 	}
 
-	err := messages.GetMessages(database.DB, t, offset)
+	conversationList, err := messages.GetMessages(database.DB, t, page)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
@@ -27,8 +27,9 @@ func GetMessages(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(Response{
+	return c.Status(fiber.StatusOK).JSON(ResponseConversationList{
 		Status:  "succes",
-		Message: "Messages succesfully get",
+		Message: "Conversation list succesfully get",
+		Data:    conversationList,
 	})
 }

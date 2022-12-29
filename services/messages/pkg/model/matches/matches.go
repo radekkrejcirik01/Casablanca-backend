@@ -16,15 +16,28 @@ type Photo struct {
 }
 
 type Matched struct {
-	Email string
-	Photo string
+	Email string `json:"email"`
+	Photo string `json:"photo"`
 }
 
 // GetMatches get matches
 func GetMatches(db *gorm.DB, t *User) ([]Matched, error) {
-	matchedUsersQuery := `SELECT email FROM likes
-				WHERE email IN (SELECT user FROM likes WHERE email = '` + t.Email + `' AND value = 1)
-				AND user = '` + t.Email + `' AND value = 1`
+	matchedUsersQuery := `SELECT
+							T1.email,
+							T1.user,
+							T1.value
+						FROM
+							likes T1
+							INNER JOIN likes T2 ON (T1.email = '` + t.Email + `'
+									OR T1.user = '` + t.Email + `')
+								AND((T1.email = T2.user)
+								AND(T2.email = T1.user))
+								AND T1.value = T2.value
+								AND T1.value = 1
+								AND T1.id > T2.id
+							ORDER BY
+								T1.id DESC`
+
 	matchedUsers, errMatched := GetStringsFromQuery(db, matchedUsersQuery)
 	if errMatched != nil {
 		return nil, errMatched
