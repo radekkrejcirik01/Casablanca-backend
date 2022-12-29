@@ -8,6 +8,7 @@ import (
 
 // GetMatches POST /get/matches
 func GetMatches(c *fiber.Ctx) error {
+	page := c.Params("page")
 	t := &matches.User{}
 
 	if err := c.BodyParser(t); err != nil {
@@ -17,7 +18,7 @@ func GetMatches(c *fiber.Ctx) error {
 		})
 	}
 
-	users, err := matches.GetMatches(database.DB, t)
+	users, err := matches.GetMatches(database.DB, t, page)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",

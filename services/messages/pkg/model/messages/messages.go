@@ -1,8 +1,6 @@
 package messages
 
 import (
-	"strconv"
-
 	"gorm.io/gorm"
 )
 
@@ -77,16 +75,6 @@ func GetMessages(db *gorm.DB, t *User, page string) ([]ConversationList, error) 
 	}
 
 	return result, nil
-}
-
-func getOffset(page string) string {
-	pageNumber, err := strconv.Atoi(page)
-	if err != nil {
-		return "0"
-	}
-	offset := pageNumber * 10
-
-	return strconv.Itoa(offset)
 }
 
 func GetConversationListFromQuery(db *gorm.DB, query string) ([]ConversationList, error) {

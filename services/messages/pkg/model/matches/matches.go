@@ -15,17 +15,25 @@ type Photo struct {
 	Photo string
 }
 
+type MatchedUser struct {
+	Email string
+	User  string
+}
+
 type Matched struct {
-	Email string `json:"email"`
-	Photo string `json:"photo"`
+	Email          string `json:"email"`
+	Firstname      string `json:"firstname"`
+	Birthday       string `json:"birthday"`
+	ProfilePicture string `json:"profilePicture"`
 }
 
 // GetMatches get matches
-func GetMatches(db *gorm.DB, t *User) ([]Matched, error) {
+func GetMatches(db *gorm.DB, t *User, page string) ([]Matched, error) {
+	offset := helpers.getOffset(page)
+
 	matchedUsersQuery := `SELECT
 							T1.email,
-							T1.user,
-							T1.value
+							T1.user
 						FROM
 							likes T1
 							INNER JOIN likes T2 ON (T1.email = '` + t.Email + `'
@@ -36,41 +44,42 @@ func GetMatches(db *gorm.DB, t *User) ([]Matched, error) {
 								AND T1.value = 1
 								AND T1.id > T2.id
 							ORDER BY
-								T1.id DESC`
+								T1.id DESC
+								LIMIT 10 OFFSET ` + offset
 
-	matchedUsers, errMatched := GetStringsFromQuery(db, matchedUsersQuery)
+	matchedUsers, errMatched := GetMatchedUsersFromQuery(db, matchedUsersQuery)
 	if errMatched != nil {
 		return nil, errMatched
 	}
 
+	emailStrings := getEmailStrings(matchedUsers, t.Email)
+
 	var emails []string
-	for _, user := range matchedUsers {
+	for _, user := range emailStrings {
 		emails = append(emails, "'"+user+"'")
 	}
-	emailStrings := strings.Join(emails, ", ")
+	userEmails := strings.Join(emails, ", ")
 
-	photosQuery := `SELECT user, photo FROM photos WHERE user IN (` + emailStrings + `) GROUP BY user`
-	photos, errPhotos := GetPhotosFromQuery(db, photosQuery)
-	if errPhotos != nil {
-		return nil, errPhotos
+	usersQuery := `SELECT email, firstname, birthday, profile_picture FROM users WHERE email IN (` + userEmails + `)`
+
+	users, err := GetUsersFromQuery(db, usersQuery)
+	if err != nil {
+		return nil, err
 	}
 
 	var result []Matched
-	for _, user := range matchedUsers {
-		var matchedUser Matched
-		for _, photo := range photos {
-			if user == photo.User {
-				matchedUser = Matched{Email: user, Photo: photo.Photo}
+	for _, email := range emailStrings {
+		for _, user := range users {
+			if email == user.Email {
+				result = append(result, user)
 			}
 		}
-
-		result = append(result, matchedUser)
 	}
 
 	return result, nil
 }
 
-func GetStringsFromQuery(db *gorm.DB, query string) ([]string, error) {
+func GetMatchedUsersFromQuery(db *gorm.DB, query string) ([]MatchedUser, error) {
 	rows, err := db.Raw(query).Rows()
 	if err != nil {
 		return nil, err
@@ -78,7 +87,7 @@ func GetStringsFromQuery(db *gorm.DB, query string) ([]string, error) {
 
 	defer rows.Close()
 
-	var array []string
+	var array []MatchedUser
 	for rows.Next() {
 		db.ScanRows(rows, &array)
 	}
@@ -86,7 +95,19 @@ func GetStringsFromQuery(db *gorm.DB, query string) ([]string, error) {
 	return array, nil
 }
 
-func GetPhotosFromQuery(db *gorm.DB, query string) ([]Photo, error) {
+func getEmailStrings(matchedUsers []MatchedUser, email string) []string {
+	var emailStrings []string
+	for _, value := range matchedUsers {
+		if value.Email == email {
+			emailStrings = append(emailStrings, value.User)
+		} else {
+			emailStrings = append(emailStrings, value.Email)
+		}
+	}
+	return emailStrings
+}
+
+func GetUsersFromQuery(db *gorm.DB, query string) ([]Matched, error) {
 	rows, err := db.Raw(query).Rows()
 	if err != nil {
 		return nil, err
@@ -94,10 +115,10 @@ func GetPhotosFromQuery(db *gorm.DB, query string) ([]Photo, error) {
 
 	defer rows.Close()
 
-	var photos []Photo
+	var users []Matched
 	for rows.Next() {
-		db.ScanRows(rows, &photos)
+		db.ScanRows(rows, &users)
 	}
 
-	return photos, nil
+	return users, nil
 }
