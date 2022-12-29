@@ -10,6 +10,7 @@ type UserRegistration struct {
 	Email              string
 	Firstname          string
 	Birthday           string
+	ProfilePicture     string
 	About              string
 	Photos             pq.StringArray
 	Tags               pq.StringArray
@@ -28,6 +29,7 @@ type User struct {
 	Email              string
 	Firstname          string
 	Birthday           string
+	ProfilePicture     string
 	About              string `gorm:"size:256"`
 	Gender             int
 	ShowMe             int

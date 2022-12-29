@@ -41,10 +41,16 @@ func UpdatePhotos(db *gorm.DB, t *Photos) error {
 		photos = append(photos, Photo{User: t.User, Photo: photo})
 	}
 
+	profilePicture := photos[0].Photo
+
 	if err := db.Table("photos").Where("user = ?", t.User).Delete(t).Error; err != nil {
 		return err
 	}
 	if err := db.Create(photos).Error; err != nil {
+		return err
+	}
+	if err := db.Table("users").Where("email = ?", t.User).
+		Update("profile_picture", profilePicture).Error; err != nil {
 		return err
 	}
 

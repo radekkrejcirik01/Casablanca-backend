@@ -15,6 +15,7 @@ type UserDataResponse struct {
 	Email              string   `json:"email"`
 	Firstname          string   `json:"firstname"`
 	Birthday           string   `json:"birthday"`
+	ProfilePicture     string   `json:"profilePicture"`
 	About              string   `json:"about"`
 	Photos             []string `json:"photos"`
 	Tags               []string `json:"tags"`
