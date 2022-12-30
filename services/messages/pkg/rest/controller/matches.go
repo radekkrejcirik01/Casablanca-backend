@@ -9,7 +9,7 @@ import (
 // GetMatches POST /get/matches
 func GetMatches(c *fiber.Ctx) error {
 	page := c.Params("page")
-	t := &matches.User{}
+	t := &matches.Email{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{

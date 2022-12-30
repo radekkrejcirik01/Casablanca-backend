@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type Email struct {
 	Email string
 }
 
@@ -29,7 +29,7 @@ type Matched struct {
 }
 
 // GetMatches get matches
-func GetMatches(db *gorm.DB, t *User, page string) ([]Matched, error) {
+func GetMatches(db *gorm.DB, t *Email, page string) ([]Matched, error) {
 	offset := helpers.GetOffset(page)
 
 	matchedUsersQuery := `SELECT
@@ -53,14 +53,9 @@ func GetMatches(db *gorm.DB, t *User, page string) ([]Matched, error) {
 		return nil, errMatched
 	}
 
-	emailStrings := getEmailStrings(matchedUsers, t.Email)
+	emailStrings := getEmailStringsArray(matchedUsers, t.Email)
 
-	var emails []string
-	for _, user := range emailStrings {
-		emails = append(emails, "'"+user+"'")
-	}
-	userEmails := strings.Join(emails, ", ")
-
+	userEmails := getUserEmailsString(emailStrings)
 	usersQuery := `SELECT email, firstname, birthday, profile_picture FROM users WHERE email IN (` + userEmails + `)`
 
 	users, err := GetUsersFromQuery(db, usersQuery)
@@ -96,7 +91,7 @@ func GetMatchedUsersFromQuery(db *gorm.DB, query string) ([]MatchedUser, error) 
 	return array, nil
 }
 
-func getEmailStrings(matchedUsers []MatchedUser, email string) []string {
+func getEmailStringsArray(matchedUsers []MatchedUser, email string) []string {
 	var emailStrings []string
 	for _, value := range matchedUsers {
 		if value.Email == email {
@@ -106,6 +101,15 @@ func getEmailStrings(matchedUsers []MatchedUser, email string) []string {
 		}
 	}
 	return emailStrings
+}
+
+func getUserEmailsString(emailStrings []string) string {
+	var emails []string
+	for _, user := range emailStrings {
+		emails = append(emails, "'"+user+"'")
+	}
+
+	return strings.Join(emails, ", ")
 }
 
 func GetUsersFromQuery(db *gorm.DB, query string) ([]Matched, error) {
