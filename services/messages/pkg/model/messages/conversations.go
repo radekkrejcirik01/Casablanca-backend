@@ -11,19 +11,6 @@ type Email struct {
 	Email string
 }
 
-type Message struct {
-	Id       uint `gorm:"primary_key;auto_increment;not_null"`
-	Sender   string
-	Receiver string
-	Message  string
-	Time     string
-	IsRead   uint `gorm:"default:0"`
-}
-
-func (Message) TableName() string {
-	return "messages"
-}
-
 type MessagedUser struct {
 	Sender   string
 	Receiver string
@@ -133,7 +120,7 @@ func getFormattedMessagedUsers(messagedUsers []MessagedUser, email string) []Mes
 				Receiver: value.Sender,
 				Message:  value.Message,
 				Time:     value.Time,
-				IsRead:   0,
+				IsRead:   1,
 			})
 		} else {
 			result = append(result, value)

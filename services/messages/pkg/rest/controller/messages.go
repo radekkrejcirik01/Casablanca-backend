@@ -38,7 +38,7 @@ func GetConversations(c *fiber.Ctx) error {
 func GetMessages(c *fiber.Ctx) error {
 	page := c.Params("page")
 
-	t := &messages.MessagesBody{}
+	t := &messages.MessagesGetBody{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -59,6 +59,29 @@ func GetMessages(c *fiber.Ctx) error {
 		Status:  "succes",
 		Message: "Messages succesfully get",
 		Data:    messages,
+	})
+}
+
+func SendMessage(c *fiber.Ctx) error {
+	t := &messages.Message{}
+
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	if err := messages.SendMessage(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(Response{
+		Status:  "succes",
+		Message: "Message succesfully sent",
 	})
 }
 
