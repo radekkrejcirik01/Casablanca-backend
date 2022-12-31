@@ -27,3 +27,9 @@ type ResponseMessages struct {
 	Message string              `json:"message"`
 	Data    []messages.Messages `json:"data"`
 }
+
+type ResponseUser struct {
+	Status  string            `json:"status"`
+	Message string            `json:"message"`
+	Data    messages.ChatUser `json:"data"`
+}

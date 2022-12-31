@@ -61,3 +61,29 @@ func GetMessages(c *fiber.Ctx) error {
 		Data:    messages,
 	})
 }
+
+// GetUser POST /get/user
+func GetUser(c *fiber.Ctx) error {
+	t := &messages.UserBody{}
+
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	user, err := messages.GetUser(database.DB, t)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(ResponseUser{
+		Status:  "succes",
+		Message: "User succesfully get",
+		Data:    user,
+	})
+}
