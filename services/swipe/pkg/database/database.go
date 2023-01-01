@@ -16,6 +16,7 @@ var (
 	dbuser     = ""
 	dbpassword = ""
 	dbname     = ""
+	fcmclient  = ""
 )
 
 // DB is connected MySQL DB
@@ -32,6 +33,8 @@ func init() {
 	dbuser = os.Getenv("DBUSER")
 	dbpassword = os.Getenv("DBPASSWORD")
 	dbname = os.Getenv("DBNAME")
+
+	fcmclient = os.Getenv("FCM")
 }
 
 // Connect to MySQL server
@@ -55,4 +58,9 @@ func Connect() {
 // GetConfig for debuging
 func GetConfig() (string, string, string, string, string) {
 	return dbhost, dbport, dbuser, dbpassword, dbname
+}
+
+// GetFcmClient get fcm client
+func GetFcmClient() string {
+	return fcmclient
 }
