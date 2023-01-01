@@ -62,29 +62,7 @@ func GetMessages(c *fiber.Ctx) error {
 	})
 }
 
-func SendMessage(c *fiber.Ctx) error {
-	t := &messages.SentMessage{}
-
-	if err := c.BodyParser(t); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(Response{
-			Status:  "error",
-			Message: err.Error(),
-		})
-	}
-
-	if err := messages.SendMessage(database.DB, t); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(Response{
-			Status:  "error",
-			Message: err.Error(),
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(Response{
-		Status:  "succes",
-		Message: "Message succesfully sent",
-	})
-}
-
+// UpdateRead POST /update/read
 func UpdateRead(c *fiber.Ctx) error {
 	t := &messages.MessagesBody{}
 
@@ -105,6 +83,30 @@ func UpdateRead(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
 		Message: "Read succesfully updated",
+	})
+}
+
+// SendMessage POST /send/messages
+func SendMessage(c *fiber.Ctx) error {
+	t := &messages.SentMessage{}
+
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	if err := messages.SendMessage(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(Response{
+		Status:  "succes",
+		Message: "Message succesfully sent",
 	})
 }
 

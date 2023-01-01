@@ -78,6 +78,7 @@ func GetMessages(db *gorm.DB, t *MessagesBody, page string) ([]Messages, error) 
 	return messages, nil
 }
 
+// SendMessage send message
 func SendMessage(db *gorm.DB, t *SentMessage) error {
 	create := Message{
 		Sender:   t.Sender,
@@ -157,6 +158,7 @@ func SendNotification(t *Notification) error {
 	return nil
 }
 
+// UpdateRead update message as read
 func UpdateRead(db *gorm.DB, t *MessagesBody) error {
 	return db.Table("messages").Where("sender = ? AND receiver = ?", t.User, t.Email).Update("is_read", 1).Error
 }
