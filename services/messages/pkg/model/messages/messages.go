@@ -110,7 +110,7 @@ func GetUserTokensByUser(db *gorm.DB, t *[]string, user string) error {
 }
 
 func SendNotification(t *Notification) error {
-	fcmClient := database.GetFCMClient()
+	fcmClient := database.GetFcmClient()
 	tokens := t.Devices
 
 	for _, token := range tokens {

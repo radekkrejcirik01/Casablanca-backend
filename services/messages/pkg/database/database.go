@@ -60,6 +60,6 @@ func GetConfig() (string, string, string, string, string) {
 	return dbhost, dbport, dbuser, dbpassword, dbname
 }
 
-func GetFCMClient() string {
+func GetFcmClient() string {
 	return fcmclient
 }
