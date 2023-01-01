@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/database"
 	devices "github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/model/devices"
-	"github.com/radekkrejcirik01/Casblanca-backend/services/pushnotifications/pkg/model/notify"
 )
 
 func SaveDevice(c *fiber.Ctx) error {
@@ -30,8 +29,8 @@ func SaveDevice(c *fiber.Ctx) error {
 	})
 }
 
-func SendToDevice(c *fiber.Ctx) error {
-	t := &notify.NotifyDevice{}
+func DeleteDevice(c *fiber.Ctx) error {
+	t := &devices.Device{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -40,7 +39,7 @@ func SendToDevice(c *fiber.Ctx) error {
 		})
 	}
 
-	if err := notify.Notify(t); err != nil {
+	if err := devices.DeleteDevice(database.DB, t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
 			Message: err.Error(),
@@ -49,6 +48,6 @@ func SendToDevice(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
-		Message: "Device succesfully saved",
+		Message: "Device succesfully deleted",
 	})
 }

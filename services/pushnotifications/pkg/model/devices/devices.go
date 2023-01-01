@@ -13,16 +13,9 @@ func (Device) TableName() string {
 }
 
 func SaveDevice(db *gorm.DB, t *Device) error {
-	exists := GetEntryByToken(db, t.DeviceToken)
-	if !exists {
-		return db.Create(t).Error
-	}
-	return nil
+	return db.FirstOrCreate(t, t).Error
 }
 
-func GetEntryByToken(db *gorm.DB, token string) bool {
-	var exists bool
-	db.Table("devices").Select("count(*) > 0").Where("device_token = ?", token).Find(&exists)
-
-	return exists
+func DeleteDevice(db *gorm.DB, t *Device) error {
+	return db.Where("email = ? AND device_token = ?", t.Email, t.DeviceToken).Delete(t).Error
 }
