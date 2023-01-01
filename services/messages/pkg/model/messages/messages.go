@@ -45,6 +45,7 @@ type Messages struct {
 }
 
 type Notification struct {
+	Sender  string
 	Title   string
 	Body    string
 	Devices []string
@@ -94,6 +95,7 @@ func SendMessage(db *gorm.DB, t *SentMessage) error {
 			return err
 		}
 		notification := Notification{
+			Sender:  t.Sender,
 			Title:   t.SenderFirstname,
 			Body:    t.Message,
 			Devices: *tokens,
@@ -133,6 +135,10 @@ func SendNotification(t *Notification) error {
 	for _, token := range tokens {
 		msg := &fcm.Message{
 			To: token,
+			Data: map[string]interface{}{
+				"type":   "message",
+				"sender": t.Sender,
+			},
 			Notification: &fcm.Notification{
 				Title: t.Title,
 				Body:  t.Body,
