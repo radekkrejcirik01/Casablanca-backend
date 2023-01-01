@@ -9,23 +9,31 @@ import (
 	"gorm.io/gorm"
 )
 
-type MessagesGetBody struct {
+type MessagesBody struct {
 	Email string
 	User  string
 }
 
 type Message struct {
-	Id              uint `gorm:"primary_key;auto_increment;not_null"`
+	Id       uint `gorm:"primary_key;auto_increment;not_null"`
+	Sender   string
+	Receiver string
+	Message  string
+	Time     string
+	IsRead   uint `gorm:"default:0"`
+}
+
+func (Message) TableName() string {
+	return "messages"
+}
+
+type SentMessage struct {
 	Sender          string
 	SenderFirstname string
 	Receiver        string
 	Message         string
 	Time            string
-	IsRead          uint `gorm:"default:0"`
-}
-
-func (Message) TableName() string {
-	return "messages"
+	IsRead          uint
 }
 
 type Messages struct {
@@ -43,7 +51,7 @@ type Notification struct {
 }
 
 // GetMessages get messages
-func GetMessages(db *gorm.DB, t *MessagesGetBody, page string) ([]Messages, error) {
+func GetMessages(db *gorm.DB, t *MessagesBody, page string) ([]Messages, error) {
 	offset := helpers.GetOffset(page)
 
 	messagesQuery := `SELECT
@@ -70,8 +78,15 @@ func GetMessages(db *gorm.DB, t *MessagesGetBody, page string) ([]Messages, erro
 	return messages, nil
 }
 
-func SendMessage(db *gorm.DB, t *Message) error {
-	err := db.Table("messages").Create(t).Error
+func SendMessage(db *gorm.DB, t *SentMessage) error {
+	create := Message{
+		Sender:   t.Sender,
+		Receiver: t.Receiver,
+		Message:  t.Message,
+		Time:     t.Time,
+	}
+
+	err := db.Select("sender", "receiver", "message", "time").Create(&create).Error
 	if err == nil {
 		tokens := &[]string{}
 		if err := GetUserTokensByUser(db, tokens, t.Receiver); err != nil {
@@ -86,6 +101,7 @@ func SendMessage(db *gorm.DB, t *Message) error {
 		SendNotification(&notification)
 		return err
 	}
+
 	return err
 }
 
@@ -139,4 +155,8 @@ func SendNotification(t *Notification) error {
 	}
 
 	return nil
+}
+
+func UpdateRead(db *gorm.DB, t *MessagesBody) error {
+	return db.Table("messages").Where("sender = ? AND receiver = ?", t.User, t.Email).Update("is_read", 1).Error
 }

@@ -38,7 +38,7 @@ func GetConversations(c *fiber.Ctx) error {
 func GetMessages(c *fiber.Ctx) error {
 	page := c.Params("page")
 
-	t := &messages.MessagesGetBody{}
+	t := &messages.MessagesBody{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -63,7 +63,7 @@ func GetMessages(c *fiber.Ctx) error {
 }
 
 func SendMessage(c *fiber.Ctx) error {
-	t := &messages.Message{}
+	t := &messages.SentMessage{}
 
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
@@ -82,6 +82,29 @@ func SendMessage(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
 		Message: "Message succesfully sent",
+	})
+}
+
+func UpdateRead(c *fiber.Ctx) error {
+	t := &messages.MessagesBody{}
+
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	if err := messages.UpdateRead(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(Response{
+		Status:  "succes",
+		Message: "Read succesfully updated",
 	})
 }
 
