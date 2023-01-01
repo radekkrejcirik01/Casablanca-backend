@@ -77,6 +77,9 @@ func SendNotification(t *Notification) error {
 	for _, token := range tokens {
 		msg := &fcm.Message{
 			To: token,
+			Data: map[string]interface{}{
+				"type": "match",
+			},
 			Notification: &fcm.Notification{
 				Title: t.Title,
 				Body:  t.Body,
