@@ -9,10 +9,11 @@ import (
 )
 
 type Like struct {
-	Id    uint `gorm:"primary_key;auto_increment;not_null"`
-	Email string
-	User  string
-	Value int
+	Id     uint `gorm:"primary_key;auto_increment;not_null"`
+	Email  string
+	User   string
+	Value  int `gorm:"size:1"`
+	IsRead int `gorm:"size:1;default:0"`
 }
 
 func (Like) TableName() string {
