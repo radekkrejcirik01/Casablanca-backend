@@ -32,3 +32,27 @@ func GetMatches(c *fiber.Ctx) error {
 		Data:    users,
 	})
 }
+
+// UpdateSeen POST /update/seen
+func UpdateSeen(c *fiber.Ctx) error {
+	t := &matches.Match{}
+
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	if err := matches.UpdateSeen(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(Response{
+		Status:  "succes",
+		Message: "Seen succesfully updated",
+	})
+}

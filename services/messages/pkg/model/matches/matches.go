@@ -11,6 +11,11 @@ type Email struct {
 	Email string
 }
 
+type Match struct {
+	Email string
+	User  string
+}
+
 type Photo struct {
 	User  string
 	Photo string
@@ -19,7 +24,7 @@ type Photo struct {
 type MatchedUser struct {
 	Email  string
 	User   string
-	IsRead uint
+	IsSeen uint
 }
 
 type User struct {
@@ -31,7 +36,7 @@ type User struct {
 
 type Matched struct {
 	User   User `json:"user"`
-	IsRead uint `json:"isRead"`
+	IsSeen uint `json:"isSeen"`
 }
 
 // GetMatches get matches
@@ -42,10 +47,10 @@ func GetMatches(db *gorm.DB, t *Email, page string) ([]Matched, error) {
 							T1.email,
 							T1.user,
 							CASE WHEN T1.email = '` + t.Email + `' THEN
-								T1.is_read
+								T1.is_seen
 							ELSE
-								T2.is_read
-							END AS is_read
+								T2.is_seen
+							END AS is_seen
 						FROM
 							likes T1
 							INNER JOIN likes T2 ON (T1.email = '` + t.Email + `'
@@ -80,13 +85,18 @@ func GetMatches(db *gorm.DB, t *Email, page string) ([]Matched, error) {
 			if value.User == user.Email {
 				result = append(result, Matched{
 					User:   user,
-					IsRead: value.IsRead,
+					IsSeen: value.IsSeen,
 				})
 			}
 		}
 	}
 
 	return result, nil
+}
+
+// UpdateSeen update match as seen
+func UpdateSeen(db *gorm.DB, t *Match) error {
+	return db.Table("likes").Where("email = ? AND user = ?", t.Email, t.User).Update("is_seen", 1).Error
 }
 
 func GetMatchedUsersFromQuery(db *gorm.DB, query string) ([]MatchedUser, error) {
@@ -114,7 +124,7 @@ func formatMatchedUsers(matchedUsers []MatchedUser, email string) []MatchedUser 
 			result = append(result, MatchedUser{
 				Email:  value.User,
 				User:   value.Email,
-				IsRead: value.IsRead,
+				IsSeen: value.IsSeen,
 			})
 		}
 	}
