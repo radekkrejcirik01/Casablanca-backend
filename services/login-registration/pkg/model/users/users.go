@@ -141,10 +141,20 @@ func UpdateLastActive(db *gorm.DB, t *LastActive) error {
 }
 
 // Update password in users table in DB
-func UpdatePassword(db *gorm.DB, t *UserUpdatePassword) error {
-	return db.Table("users").
+func UpdatePassword(db *gorm.DB, t *UserUpdatePassword) (string, error) {
+	r := db.Table("users").
 		Where("email = ? AND password = ?", t.Email, t.OldPassword).
-		Update("password", t.NewPassword).Error
+		Update("password", t.NewPassword)
+
+	if r.Error != nil {
+		return "Sorry, something went wrong 😕", r.Error
+	}
+
+	if r.RowsAffected == 0 {
+		return "Old password is incorrect", nil
+	}
+
+	return "Successfully changed password 🎉", nil
 }
 
 // Delete user from users table in DB

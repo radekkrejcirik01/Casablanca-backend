@@ -343,21 +343,23 @@ func UpdateLastActive(c *fiber.Ctx) error {
 // UpdatePassword POST /password/update
 func UpdatePassword(c *fiber.Ctx) error {
 	t := &users.UserUpdatePassword{}
+	errMessage := "Sorry, something went wrong 😕"
 	if err := c.BodyParser(t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
-			Message: err.Error(),
+			Message: errMessage,
 		})
 	}
-	if err := users.UpdatePassword(database.DB, t); err != nil {
+	message, err := users.UpdatePassword(database.DB, t)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
-			Message: err.Error(),
+			Message: errMessage,
 		})
 	}
 	return c.Status(fiber.StatusOK).JSON(Response{
 		Status:  "succes",
-		Message: "Password succesfully updated!",
+		Message: message,
 	})
 }
 
