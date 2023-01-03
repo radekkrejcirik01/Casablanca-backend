@@ -13,7 +13,7 @@ type Like struct {
 	Email  string
 	User   string
 	Value  int `gorm:"size:1"`
-	IsRead int `gorm:"size:1;default:0"`
+	IsSeen int `gorm:"size:1;default:0"`
 }
 
 func (Like) TableName() string {
