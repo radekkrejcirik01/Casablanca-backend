@@ -23,10 +23,11 @@ func Create() *fiber.App {
 	app.Put("/filterByTags/update", controller.UpdateFilterByTags)
 	app.Put("/showMe/update", controller.UpdateShowMe)
 	app.Put("/lastActive/update", controller.UpdateLastActive)
+	app.Put("/password/update", controller.UpdatePassword)
 
 	app.Post("/get", controller.UserGet)
 
-	app.Delete("/delete", controller.UserDelete)
+	app.Post("/delete/user", controller.UserDelete)
 
 	return app
 }

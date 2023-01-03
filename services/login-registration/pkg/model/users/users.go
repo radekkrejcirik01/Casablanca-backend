@@ -76,6 +76,16 @@ type LastActive struct {
 	LastActive string
 }
 
+type UserUpdatePassword struct {
+	Email       string
+	OldPassword string
+	NewPassword string
+}
+
+type UserDelete struct {
+	Email string
+}
+
 func (User) TableName() string {
 	return "users"
 }
@@ -130,17 +140,14 @@ func UpdateLastActive(db *gorm.DB, t *LastActive) error {
 	return db.Table("users").Where("email = ?", t.Email).Update("last_active", t.LastActive).Error
 }
 
-// Delete User from DB
-func Delete(db *gorm.DB, t *User) error {
-	return db.Delete(t).Error
+// Update password in users table in DB
+func UpdatePassword(db *gorm.DB, t *UserUpdatePassword) error {
+	return db.Table("users").
+		Where("email = ? AND password = ?", t.Email, t.OldPassword).
+		Update("password", t.NewPassword).Error
 }
 
-// DeleteByID one User by ID
-func DeleteById(db *gorm.DB, t *User) error {
-	users := &User{}
-	if err := ReadByEmail(db, t); err != nil {
-		return err
-	}
-	return db.Where("email = ?", t.Email).Delete(users).Error
-
+// Delete user from users table in DB
+func DeleteUser(db *gorm.DB, t *UserDelete) error {
+	return db.Table("users").Where("email = ?", t.Email).Delete(&User{}).Error
 }

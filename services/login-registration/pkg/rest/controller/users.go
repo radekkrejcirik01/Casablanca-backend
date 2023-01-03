@@ -340,10 +340,37 @@ func UpdateLastActive(c *fiber.Ctx) error {
 	})
 }
 
-// UserDel DELETE /delete/:id
+// UpdatePassword POST /password/update
+func UpdatePassword(c *fiber.Ctx) error {
+	t := &users.UserUpdatePassword{}
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+	if err := users.UpdatePassword(database.DB, t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(Response{
+		Status:  "succes",
+		Message: "Password succesfully updated!",
+	})
+}
+
+// UserDelete POST /delete/user
 func UserDelete(c *fiber.Ctx) error {
-	t := &users.User{}
-	if err := users.DeleteById(database.DB, t); err != nil {
+	t := &users.UserDelete{}
+	if err := c.BodyParser(t); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(Response{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+	if err := users.DeleteUser(database.DB, t); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
 			Status:  "error",
 			Message: err.Error(),
