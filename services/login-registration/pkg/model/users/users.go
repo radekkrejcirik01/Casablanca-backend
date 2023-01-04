@@ -159,5 +159,23 @@ func UpdatePassword(db *gorm.DB, t *UserUpdatePassword) (string, error) {
 
 // Delete user from users table in DB
 func DeleteUser(db *gorm.DB, t *UserDelete) error {
-	return db.Table("users").Where("email = ?", t.Email).Delete(&User{}).Error
+	if err := db.Table("devices").Where("email = ?", t.Email).Delete(t).Error; err != nil {
+		return err
+	}
+	if err := db.Table("likes").Where("email = ?", t.Email).Delete(t).Error; err != nil {
+		return err
+	}
+	if err := db.Table("messages").Where("sender = ? OR receiver = ?", t.Email, t.Email).Delete(t).Error; err != nil {
+		return err
+	}
+	if err := db.Table("photos").Where("email = ?", t.Email).Delete(t).Error; err != nil {
+		return err
+	}
+	if err := db.Table("tags").Where("email = ?", t.Email).Delete(t).Error; err != nil {
+		return err
+	}
+	if err := db.Table("users").Where("email = ?", t.Email).Delete(t).Error; err != nil {
+		return err
+	}
+	return nil
 }

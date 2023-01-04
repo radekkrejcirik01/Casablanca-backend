@@ -33,8 +33,8 @@ func UserRegister(c *fiber.Ctx) error {
 		LastActive:         t.LastActive,
 		Password:           t.Password,
 	}
-	tags := &users.Tags{User: t.Email, Tags: t.Tags}
-	photos := &users.Photos{User: t.Email, Photos: t.Photos}
+	tags := &users.Tags{Email: t.Email, Tags: t.Tags}
+	photos := &users.Photos{Email: t.Email, Photos: t.Photos}
 
 	if err := users.CreateUser(database.DB, user); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(Response{
