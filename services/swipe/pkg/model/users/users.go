@@ -24,13 +24,13 @@ type User struct {
 }
 
 type Photo struct {
-	User  string
+	Email string
 	Photo string
 }
 
 type Tag struct {
-	User string
-	Tag  string
+	Email string
+	Tag   string
 }
 
 type UserData struct {
@@ -125,7 +125,7 @@ func getPhotosByUsers(db *gorm.DB, users []UserData) ([]UserData, error) {
 	}
 	emailStrings := strings.Join(emails, ", ")
 
-	query := "SELECT * FROM photos WHERE user IN (" + emailStrings + ")"
+	query := "SELECT * FROM photos WHERE email IN (" + emailStrings + ")"
 
 	rows, err := db.Raw(query).Rows()
 	if err != nil {
@@ -143,7 +143,7 @@ func getPhotosByUsers(db *gorm.DB, users []UserData) ([]UserData, error) {
 		var arr []string
 
 		for _, photo := range photos {
-			if user.Email == photo.User {
+			if user.Email == photo.Email {
 				arr = append(arr, photo.Photo)
 			}
 		}
@@ -161,7 +161,7 @@ func getTagsByUsers(db *gorm.DB, users []UserData) ([]UserData, error) {
 	}
 	emailStrings := strings.Join(emails, ", ")
 
-	query := "SELECT * FROM tags WHERE user IN (" + emailStrings + ")"
+	query := "SELECT * FROM tags WHERE email IN (" + emailStrings + ")"
 
 	rows, err := db.Raw(query).Rows()
 	if err != nil {
@@ -179,7 +179,7 @@ func getTagsByUsers(db *gorm.DB, users []UserData) ([]UserData, error) {
 		var arr []string
 
 		for _, tag := range tags {
-			if user.Email == tag.User {
+			if user.Email == tag.Email {
 				arr = append(arr, tag.Tag)
 			}
 		}
